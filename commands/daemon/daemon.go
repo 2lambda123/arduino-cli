@@ -31,6 +31,7 @@ import (
 	"github.com/arduino/arduino-cli/commands/sketch"
 	"github.com/arduino/arduino-cli/commands/upload"
 	"github.com/arduino/arduino-cli/i18n"
+	"github.com/arduino/arduino-cli/internal/cli/instance"
 	rpc "github.com/arduino/arduino-cli/rpc/cc/arduino/cli/commands/v1"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
@@ -180,7 +181,9 @@ func (s *ArduinoCoreServerImpl) Create(ctx context.Context, req *rpc.CreateReque
 
 // Init FIXMEDOC
 func (s *ArduinoCoreServerImpl) Init(req *rpc.InitRequest, stream rpc.ArduinoCoreService_InitServer) error {
-	err := commands.Init(req, func(message *rpc.InitResponse) {
+		// The question is: should we init here in daemon?
+		instance.Init(req.GetInstance())
+		err := commands.Init(req, func(message *rpc.InitResponse) {
 		stream.Send(message)
 	})
 	return convertErrorToRPCStatus(err)

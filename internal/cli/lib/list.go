@@ -55,6 +55,7 @@ not listed, they can be listed by adding the --all flag.`),
 }
 
 func runListCommand(args []string, all bool, updatable bool) {
+	// we init here in cli
 	instance := instance.CreateAndInit()
 	logrus.Info("Executing `arduino-cli lib list`")
 	List(instance, args, all, updatable)
